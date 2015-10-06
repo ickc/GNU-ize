@@ -13,7 +13,7 @@ brew install coreutils binutils diffutils ed findutils gawk gnu-indent gnu-sed \
   --override-system-vim --custom-system-icons
 
 # Empty the .bash_path file that holds GNU paths
-> ~/.bash_path
+echo 'export PATH="/usr/local/sbin:$PATH"' > ~/.bash_path
 
 # Build PATH variable script in ~/.bash_path
 for i in /usr/local/Cellar/*/*/bin; do
@@ -34,6 +34,7 @@ PATCH=`grep "~/.bash_path" ~/.bash_profile`
 if [ "$PATCH" == "" ]; then
   # Add Ubuntu-style PS1 to .bash_profile
   cat <<EOF > ~/.bash_profile
+alias ll="ls -ahl --color=always"
 export PS1="\[\033[1;32m\]\u@\h\[\033[0m\]:\[\033[1;34m\]\w\[\033[0m\]# "
 EOF
   # Add .bash_path to .bash_profile
