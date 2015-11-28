@@ -7,6 +7,7 @@ brew install coreutils binutils diffutils ed findutils gawk gnu-indent gnu-sed \
   m4 make nano file-formula git less openssh python rsync svn unzip vim \
   --default-names --with-default-names --with-gettext --override-system-vi \
   --override-system-vim --custom-system-icons
+brew cleanup
 
 # Empty the .bash_path file that holds GNU paths
 echo 'export PATH="/usr/local/sbin:$PATH"' > ~/.bash_path
