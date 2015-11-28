@@ -1,9 +1,5 @@
 #!/bin/bash
 
-# Install Homebrew (if not already installed)
-ruby -e "$(curl -fsSL "\
-"https://raw.githubusercontent.com/Homebrew/install/master/install)"
-
 # Install required packages from Homebrew
 brew tap homebrew/dupes
 brew install coreutils binutils diffutils ed findutils gawk gnu-indent gnu-sed \
