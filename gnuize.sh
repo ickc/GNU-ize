@@ -19,7 +19,7 @@ for i in /usr/local/Cellar/*/*/bin  /usr/local/Cellar/*/*/libexec/gnubin; do
   echo -n ":${i//://}" >> $PATH_FILE
 done
 
-echo '${PATH+:}$PATH"' >> $PATH_FILE
+echo -e '${PATH+:}$PATH"\n' >> $PATH_FILE
 
 echo -n 'export MANPATH="' >> $PATH_FILE
 
@@ -38,8 +38,7 @@ else
   cat <<EOF > $PROFILE_FILE
 alias ll="ls -ahl --color=always"
 export PS1="\[\033[1;32m\]\u@\h\[\033[0m\]:\[\033[1;34m\]\w\[\033[0m\]# "
+[ -f $PATH_FILE ] && source $PATH_FILE
 EOF
-  # Add .bash_path to .bash_profile
-  echo "[ -f $PATH_FILE ] && source $PATH_FILE" >> $PROFILE_FILE
 fi
 
