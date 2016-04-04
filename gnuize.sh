@@ -18,16 +18,18 @@ echo -n 'export PATH="/usr/local/sbin' > $PATH_FILE
 for i in /usr/local/Cellar/*/*/bin  /usr/local/Cellar/*/*/libexec/gnubin; do
   echo -n ":${i//://}" >> $PATH_FILE
 done
-
+#finalize PATH variable (adding back the old PATH, if exists, and closing the qoutes)
 echo -e '${PATH+:}$PATH"\n' >> $PATH_FILE
 
+
+#start the MANPATH
 echo -n 'export MANPATH="' >> $PATH_FILE
 
+# build the contents of MANPATH, the closing quote needs to be within the sed statement
+# even with "echo -n" we we would have an additional line-break otherwise
 for i in /usr/local/Cellar/*/*/share/man /usr/local/Cellar/*/*/libexec/gnuman; do
   echo -n "$i:" 
-done | sed 's#:$##' >> $PATH_FILE
-
-echo '${MANPATH+:}$MANPATH"' >> $PATH_FILE
+done | sed 's#:$#${MANPATH+:}$MANPATH"#' >> $PATH_FILE
 
 # Check if .bash_path is being called from .bash_profile, if not, rebuild it from scratch
 if grep -qE "([$]HOME|~)/\.bash_path" $PROFILE_FILE; then
@@ -41,4 +43,3 @@ export PS1="\[\033[1;32m\]\u@\h\[\033[0m\]:\[\033[1;34m\]\w\[\033[0m\]# "
 [ -f $PATH_FILE ] && source $PATH_FILE
 EOF
 fi
-
