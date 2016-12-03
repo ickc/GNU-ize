@@ -11,35 +11,36 @@ brew install coreutils binutils diffutils ed findutils gawk gnu-indent gnu-sed \
   --override-system-vim --custom-system-icons
 brew cleanup
 
+# prepare PATH
 # Empty the .bash_path file that holds GNU paths
-echo -n 'export PATH="/usr/local/sbin' > $PATH_FILE
-
+printf "%s\n" 'export PATH="/usr/local/sbin\' > $PATH_FILE
 # Build PATH variable script in ~/.bash_path
 for i in /usr/local/Cellar/*/*/bin  /usr/local/Cellar/*/*/libexec/gnubin; do
-  echo -n ":${i//://}" >> $PATH_FILE
+  printf "%s\n" ":${i//://}\\" >> $PATH_FILE
 done
 #finalize PATH variable (adding back the old PATH, if exists, and closing the qoutes)
-echo -e '${PATH+:}$PATH"\n' >> $PATH_FILE
+printf "%s\n" '${PATH+:}$PATH"' '' >> $PATH_FILE
 
-
-#start the MANPATH
-echo -n 'export MANPATH="' >> $PATH_FILE
-
+# prepare MANPATH
+# start the MANPATH
+printf "%s\n" 'export MANPATH="\' >> $PATH_FILE
 # build the contents of MANPATH, the closing quote needs to be within the sed statement
-# even with "echo -n" we we would have an additional line-break otherwise
 for i in /usr/local/Cellar/*/*/share/man /usr/local/Cellar/*/*/libexec/gnuman; do
-  echo -n "$i:" 
-done | sed 's#:$#${MANPATH+:}$MANPATH"#' >> $PATH_FILE
+  printf "%s\n" "$i:\\" >> $PATH_FILE
+done
+#finalize MATHPATH variable (adding back the old MATHPATH, if exists, and closing the qoutes)
+printf "%s\n" '${MANPATH+:}$MANPATH"' >> $PATH_FILE
 
 # Check if .bash_path is being called from .bash_profile, if not, rebuild it from scratch
-if grep -qE "([$]HOME|~)/\.bash_path" $PROFILE_FILE; then
-  # nothing to do -- .bash_profile already sources .bash_path
-else
+touch $PROFILE_FILE
+if ! grep -qE "([$]HOME|~)/\.bash_path" $PROFILE_FILE; then
   [ -e "$PROFILE_FILE" ] && mv $PROFILE_FILE $(mktemp ${PROFILE_FILE}.XXXX)
   # Add Ubuntu-style PS1 to .bash_profile
   cat <<EOF > $PROFILE_FILE
+# GNU-ize
 alias ll="ls -ahl --color=always"
 export PS1="\[\033[1;32m\]\u@\h\[\033[0m\]:\[\033[1;34m\]\w\[\033[0m\]# "
 [ -f $PATH_FILE ] && source $PATH_FILE
+
 EOF
 fi
