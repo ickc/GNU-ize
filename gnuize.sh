@@ -9,6 +9,9 @@ brew install gcc --without-multilib
 [ -e "$PROFILE_FILE" ] && mv $PROFILE_FILE $(mktemp ${PROFILE_FILE}.XXXX)
 
 # Use gcc and g++ for packages from homebrew that build from source
+export HOMEBREW_CC=$(find /usr/local/bin -iname "gcc??")
+export HOMEBREW_CXX=$(find /usr/local/bin -iname "g++??")
+# put it in PROFILE_FILE
 printf "%s\n" "export HOMEBREW_CC=$(find /usr/local/bin -iname "gcc??")" "export HOMEBREW_CXX=$(find /usr/local/bin -iname "g++??")" "" > $PROFILE_FILE
 
 # Install required packages from Homebrew
