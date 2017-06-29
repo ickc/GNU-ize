@@ -10,9 +10,11 @@ brew install gcc --without-multilib
 
 # Use gcc and g++ for packages from homebrew that build from source
 export HOMEBREW_CC=$(find /usr/local/bin -iname "gcc??")
+export HOMEBREW_CC=${HOMEBREW_CC##*/}
 export HOMEBREW_CXX=$(find /usr/local/bin -iname "g++??")
+export HOMEBREW_CXX=${HOMEBREW_CXX##*/}
 # put it in PROFILE_FILE
-printf "%s\n" "export HOMEBREW_CC=$(find /usr/local/bin -iname "gcc??")" "export HOMEBREW_CXX=$(find /usr/local/bin -iname "g++??")" "" > $PROFILE_FILE
+printf "%s\n" "export HOMEBREW_CC=$HOMEBREW_CC" "export HOMEBREW_CXX=$HOMEBREW_CXX" "" > $PROFILE_FILE
 
 # Install required packages from Homebrew
 brew tap homebrew/dupes
