@@ -1,10 +1,45 @@
 #!/usr/bin/env bash
 
-set -e
+version="0.2"
+
+usage="${BASH_SOURCE[0]} [-hU] --- install GNU tools as defaults on macOS. Version %s
+
+where:
+	-h	show this help message
+	-U	upgrade instead of fresh install
+"
+
+# getopts ######################################################################
+
+# reset getopts
+OPTIND=1
+
+# Initialize parameters
+upgrade=False
+
+# get the options
+while getopts "Uh" opt; do
+	case "$opt" in
+	U)	upgrade=True
+		;;
+	h)	printf "$usage" "$version"
+		exit 0
+		;;
+	*)	printf "$usage" "$version" 
+		exit 1
+		;;
+	esac
+done
+
+if [[ $upgrade = False ]]; then
+	install=install
+else
+	install=upgrade
+fi
 
 # brew install #########################################################
 
-brew install gcc
+brew $install gcc
 
 # Use gcc and g++ for packages from homebrew that build from source
 export HOMEBREW_CC=$(find /usr/local/bin -iname "gcc??")
@@ -13,7 +48,7 @@ export HOMEBREW_CXX=$(find /usr/local/bin -iname "g++??")
 export HOMEBREW_CXX=${HOMEBREW_CXX##*/}
 
 # Install required packages from Homebrew
-cat <<EOF | xargs brew install
+cat <<EOF | xargs brew $install
 bash
 binutils
 coreutils
@@ -37,7 +72,7 @@ watch
 wget
 EOF
 
-cat <<EOF | xargs brew install --with-default-names
+cat <<EOF | xargs brew $install --with-default-names
 aescrypt-packetizer
 ed
 findutils
@@ -52,13 +87,17 @@ inetutils
 make
 EOF
 
-cat <<EOF | xargs brew install --with-gettext
+cat <<EOF | xargs brew $install --with-gettext
 git
 wdiff
 EOF
 
-brew install vim --with-gettext --with-override-system-vi
-brew install emacs --with-cocoa --with-gnutls --with-imagemagick@6 --with-librsvg
+brew $install vim --with-gettext --with-override-system-vi
+brew $install emacs --with-cocoa --with-gnutls --with-imagemagick@6 --with-librsvg
+
+if [[ $upgrade == True ]]; then
+	brew upgrade
+fi
 
 brew cleanup
 
