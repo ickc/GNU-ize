@@ -13,7 +13,6 @@ export HOMEBREW_CXX=$(find /usr/local/bin -iname "g++??")
 export HOMEBREW_CXX=${HOMEBREW_CXX##*/}
 
 # Install required packages from Homebrew
-brew tap homebrew/dupes
 brew install coreutils binutils diffutils ed findutils gawk gnu-indent gnu-sed \
 	gnu-tar gnu-which gnutls grep gzip screen watch wdiff wget bash gdb gpatch \
 	m4 make nano file-formula git less openssh rsync svn unzip vim \
