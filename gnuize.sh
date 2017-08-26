@@ -57,6 +57,7 @@ e2fsprogs
 file-formula
 gawk
 gdb
+git
 gnutls
 gpatch
 gzip
@@ -69,6 +70,7 @@ screen
 svn
 unzip
 watch
+wdiff
 wget
 EOF
 
@@ -85,11 +87,6 @@ gnu-which
 grep
 inetutils
 make
-EOF
-
-cat <<EOF | xargs brew $install --with-gettext
-git
-wdiff
 EOF
 
 brew $install vim --with-gettext --with-override-system-vi
