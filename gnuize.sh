@@ -18,6 +18,7 @@ bash
 binutils
 coreutils
 diffutils
+e2fsprogs
 file-formula
 gawk
 gdb
@@ -31,19 +32,23 @@ openssh
 rsync
 screen
 svn
+unzip
 watch
 wget
 EOF
 
 cat <<EOF | xargs brew install --with-default-names
+aescrypt-packetizer
 ed
 findutils
 gnu-indent
 gnu-sed
 gnu-tar
 gnu-time
+gnu-units
 gnu-which
 grep
+inetutils
 make
 EOF
 
@@ -66,12 +71,15 @@ cat <<EOF >> $HOME/.bash_path
 # Ubuntu-style PS1
 alias ll="ls -ahl --color=always"
 export PS1="\[\033[1;32m\]\u@\h\[\033[0m\]:\[\033[1;34m\]\w\[\033[0m\]# "
-# cellar path
+# keg-only path
 export PATH="/usr/local/opt/file-formula/bin:\$PATH"
 export PATH="/usr/local/opt/m4/bin:\$PATH"
 export PATH="/usr/local/opt/unzip/bin:\$PATH"
 export PATH="/usr/local/opt/coreutils/libexec/gnubin:\$PATH"
 export MANPATH="/usr/local/opt/coreutils/libexec/gnuman:\$MANPATH"
+# put to the last of PATH because "this installs several executables which shadow macOS system commands."
+export PATH="\$PATH:/usr/local/opt/e2fsprogs/bin"
+export PATH="\$PATH:/usr/local/opt/e2fsprogs/sbin"
 EOF
 
 # .bash_profile ########################################################
