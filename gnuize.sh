@@ -16,15 +16,12 @@ export HOMEBREW_CXX=${HOMEBREW_CXX##*/}
 brew tap homebrew/dupes
 brew install coreutils binutils diffutils ed findutils gawk gnu-indent gnu-sed \
 	gnu-tar gnu-which gnutls grep gzip screen watch wdiff wget bash gdb gpatch \
-	m4 make nano file-formula git less openssh python rsync svn unzip vim \
+	m4 make nano file-formula git less openssh rsync svn unzip vim \
 	gnu-time \
 	--default-names --with-default-names --with-gettext --override-system-vi \
 	--override-system-vim --custom-system-icons
 brew install emacs --with-cocoa --with-gnutls --with-imagemagick@6 --with-librsvg
 brew cleanup
-
-# link the python applications installed above to /Applications
-brew linkapps python
 
 # .bash_path ###########################################################
 
