@@ -89,7 +89,7 @@ inetutils
 make
 EOF
 
-brew $install vim --with-gettext --with-override-system-vi
+brew $install vim --with-override-system-vi
 brew $install emacs --with-cocoa --with-gnutls --with-imagemagick@6 --with-librsvg
 
 if [[ $upgrade == True ]]; then
