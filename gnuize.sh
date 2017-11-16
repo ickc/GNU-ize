@@ -104,9 +104,6 @@ brew cleanup
 printf "%s\n" "# homebrew compiling using gcc" "export HOMEBREW_CC=$HOMEBREW_CC" "export HOMEBREW_CXX=$HOMEBREW_CXX" "" > $HOME/.bash_path
 
 cat << 'EOF' >> $HOME/.bash_path
-# Ubuntu-style PS1
-alias ll="ls -ahl --color=always"
-export PS1="\[\033[1;32m\]\u@\h\[\033[0m\]:\[\033[1;34m\]\w\[\033[0m\]# "
 # keg-only path
 export PATH="/usr/local/opt/file-formula/bin:$PATH"
 export PATH="/usr/local/opt/m4/bin:$PATH"
