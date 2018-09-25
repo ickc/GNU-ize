@@ -89,6 +89,7 @@ inetutils
 make
 EOF
 
+brew $install zsh --with-gdbm --with-pcre
 brew $install vim --with-override-system-vi
 brew $install emacs --with-cocoa --with-imagemagick@6 --with-librsvg
 
@@ -117,4 +118,11 @@ EOF
 
 if ! grep -qE "([$]HOME|~)/\.bash_path" $HOME/.bash_profile; then
 	printf "%s\n" "" '[[ -f $HOME/.bash_path ]] && . $HOME/.bash_path' "" >> $HOME/.bash_profile
+fi
+
+if ! grep -qE "/usr/local/bin/bash" /etc/shells; then
+	echo 'Adding /usr/local/bin/bash to /etc/shells. Ctrl-C if not needed.'
+	sudo sh -c 'echo "/usr/local/bin/bash" >> /etc/shells'
+	echo 'Adding /usr/local/bin/zsh to /etc/shells. Ctrl-C if not needed.'
+	sudo sh -c 'echo "/usr/local/bin/zsh" >> /etc/shells'
 fi
