@@ -90,7 +90,7 @@ make
 EOF
 
 brew $install vim --with-override-system-vi
-brew $install emacs --with-cocoa --with-gnutls --with-imagemagick@6 --with-librsvg
+brew $install emacs --with-cocoa --with-imagemagick@6 --with-librsvg
 
 if [[ $upgrade == True ]]; then
 	brew upgrade
@@ -105,9 +105,7 @@ printf "%s\n" "# homebrew compiling using gcc" "export HOMEBREW_CC=$HOMEBREW_CC"
 
 cat << 'EOF' >> $HOME/.bash_path
 # keg-only path
-export PATH="/usr/local/opt/file-formula/bin:$PATH"
-export PATH="/usr/local/opt/m4/bin:$PATH"
-export PATH="/usr/local/opt/unzip/bin:$PATH"
+export PATH="/usr/local/opt/openssl/bin:$PATH"
 export PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
 export MANPATH="/usr/local/opt/coreutils/libexec/gnuman:$MANPATH"
 # put to the last of PATH because "this installs several executables which shadow macOS system commands."
@@ -118,5 +116,5 @@ EOF
 # .bash_profile ########################################################
 
 if ! grep -qE "([$]HOME|~)/\.bash_path" $HOME/.bash_profile; then
-	printf "%s\n" "" '[ -f $HOME/.bash_path ] && . $HOME/.bash_path' "" >> $HOME/.bash_profile
+	printf "%s\n" "" '[[ -f $HOME/.bash_path ]] && . $HOME/.bash_path' "" >> $HOME/.bash_profile
 fi
