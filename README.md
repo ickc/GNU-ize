@@ -8,12 +8,11 @@ To find packages that you might want to override the defaults, grep these from t
 
 ```bash
 # these are simples, install with `--with-default-names` and you're done.
-grep -irl --color=auto 'with-default-names' ./
+grep -rl 'with-default-names' . | sed -E 's/^.*\/([^/]+)\.rb$/\1/g' | sort
 # these varies. Use `brew info ...` to find out
-grep -irHn --color=auto keg_only ./
+grep -rl keg_only . | sed -E 's/^.*\/([^/@]+)@?[^/@]*\.rb$/\1/g' | sort -u
 # more specific
-grep -irHn --color=auto 'keg_only :provided_by_osx' ./
-grep -irHn --color=auto 'keg_only :provided_until_xcode' ./
+grep -rl 'keg_only :provided_by_macos' . | sed -E 's/^.*\/([^/@]+)@?[^/@]*\.rb$/\1/g' | sort -u
 ```
 
 If you have a list of packages you want to install, another trick is to put the info into a log and grep `PATH`, `with-default-names`, etc.
