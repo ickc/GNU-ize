@@ -7,9 +7,8 @@ This started as a fork of [GNU-ize Mac OS X El Capitan](https://gist.github.com/
 To find packages that you might want to override the defaults, grep these from the [Homebrew Core repository](https://github.com/Homebrew/homebrew-core):
 
 ```bash
-# these are simples, install with `--with-default-names` and you're done.
-grep -rl 'with-default-names' . | sed -E 's/^.*\/([^/]+)\.rb$/\1/g' | sort
 # these varies. Use `brew info ...` to find out
+grep -rl 'prefix "g"' . | sed -E 's/^.*\/([^/@]+)@?[^/@]*\.rb$/\1/g' | sort -u
 grep -rl keg_only . | sed -E 's/^.*\/([^/@]+)@?[^/@]*\.rb$/\1/g' | sort -u
 # more specific
 grep -rl 'keg_only :provided_by_macos' . | sed -E 's/^.*\/([^/@]+)@?[^/@]*\.rb$/\1/g' | sort -u

@@ -72,9 +72,6 @@ unzip
 watch
 wdiff
 wget
-EOF
-
-cat <<EOF | xargs brew $install --with-default-names
 aescrypt-packetizer
 ed
 findutils
@@ -87,11 +84,10 @@ gnu-which
 grep
 inetutils
 make
+zsh
+vim
+emacs
 EOF
-
-brew $install zsh --with-gdbm --with-pcre
-brew $install vim --with-override-system-vi
-brew $install emacs --with-cocoa --with-imagemagick@6 --with-librsvg
 
 if [[ $upgrade == True ]]; then
 	brew upgrade
@@ -104,11 +100,15 @@ brew cleanup
 # default to use gcc
 printf "%s\n" "# homebrew compiling using gcc" "export HOMEBREW_CC=$HOMEBREW_CC" "export HOMEBREW_CXX=$HOMEBREW_CXX" "" > $HOME/.bash_path
 
+
+# gnubin
+echo "export PATH=\"$(echo /usr/local/opt/*/libexec/gnubin | tr ' ' :):\$PATH\"" >> $HOME/.bash_path
+# gnuman
+echo "export MANPATH=\"$(echo /usr/local/opt/*/libexec/gnuman | tr ' ' :):\$MANPATH\"" >> $HOME/.bash_path
+# special cases
 cat << 'EOF' >> $HOME/.bash_path
 # keg-only path
 export PATH="/usr/local/opt/openssl/bin:$PATH"
-export PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
-export MANPATH="/usr/local/opt/coreutils/libexec/gnuman:$MANPATH"
 # put to the last of PATH because "this installs several executables which shadow macOS system commands."
 export PATH="$PATH:/usr/local/opt/e2fsprogs/bin"
 export PATH="$PATH:/usr/local/opt/e2fsprogs/sbin"
