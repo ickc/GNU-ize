@@ -1,12 +1,13 @@
 #!/usr/bin/env bash
 
-version="0.2"
+version="0.3"
 
 usage="${BASH_SOURCE[0]} [-hU] --- install GNU tools as defaults on macOS. Version %s
 
 where:
 	-h	show this help message
 	-U	upgrade instead of fresh install
+	-p	prefix of the homebrew environment. Default: %s
 "
 
 # getopts ######################################################################
@@ -16,16 +17,19 @@ OPTIND=1
 
 # Initialize parameters
 upgrade=False
+prefix=/usr/local
 
 # get the options
-while getopts "Uh" opt; do
+while getopts "Up:h" opt; do
 	case "$opt" in
 	U)	upgrade=True
 		;;
-	h)	printf "$usage" "$version"
+	p)	prefix="$OPTARG"
+		;;
+	h)	printf "$usage" "$version" "$prefix"
 		exit 0
 		;;
-	*)	printf "$usage" "$version" 
+	*)	printf "$usage" "$version" "$prefix"
 		exit 1
 		;;
 	esac
@@ -42,12 +46,13 @@ fi
 brew $install gcc
 
 # Use gcc and g++ for packages from homebrew that build from source
-export HOMEBREW_CC=$(find /usr/local/bin -iname "gcc??")
+export HOMEBREW_CC=$(find $prefix/bin -iname "gcc??")
 export HOMEBREW_CC=${HOMEBREW_CC##*/}
-export HOMEBREW_CXX=$(find /usr/local/bin -iname "g++??")
+export HOMEBREW_CXX=$(find $prefix/bin -iname "g++??")
 export HOMEBREW_CXX=${HOMEBREW_CXX##*/}
 
 # Install required packages from Homebrew
+# error: git, gnutls, svn, vim, emacs
 cat <<EOF | xargs brew $install
 bash
 binutils
@@ -57,8 +62,6 @@ e2fsprogs
 file-formula
 gawk
 gdb
-git
-gnutls
 gpatch
 gzip
 less
@@ -67,7 +70,6 @@ nano
 openssh
 rsync
 screen
-svn
 unzip
 watch
 wdiff
@@ -85,8 +87,6 @@ grep
 inetutils
 make
 zsh
-vim
-emacs
 EOF
 
 if [[ $upgrade == True ]]; then
@@ -95,34 +95,33 @@ fi
 
 brew cleanup
 
-# .bash_path ###########################################################
+# .path ################################################################
 
 # default to use gcc
-printf "%s\n" "# homebrew compiling using gcc" "export HOMEBREW_CC=$HOMEBREW_CC" "export HOMEBREW_CXX=$HOMEBREW_CXX" "" > $HOME/.bash_path
+printf "%s\n" "# homebrew compiling using gcc" "export HOMEBREW_CC=$HOMEBREW_CC" "export HOMEBREW_CXX=$HOMEBREW_CXX" "" > $HOME/.path
 
 
 # gnubin
-echo "export PATH=\"$(echo /usr/local/opt/*/libexec/gnubin | tr ' ' :):\$PATH\"" >> $HOME/.bash_path
+echo "export PATH=\"$(echo $prefix/opt/*/libexec/gnubin | tr ' ' :):\$PATH\"" >> $HOME/.path
 # gnuman
-echo "export MANPATH=\"$(echo /usr/local/opt/*/libexec/gnuman | tr ' ' :):\$MANPATH\"" >> $HOME/.bash_path
+echo "export MANPATH=\"$(echo $prefix/opt/*/libexec/gnuman | tr ' ' :):\$MANPATH\"" >> $HOME/.path
 # special cases
-cat << 'EOF' >> $HOME/.bash_path
+cat << "EOF" >> $HOME/.path
 # keg-only path
-export PATH="/usr/local/opt/openssl/bin:$PATH"
+export PATH="$prefix/opt/openssl/bin:$PATH"
 # put to the last of PATH because "this installs several executables which shadow macOS system commands."
-export PATH="$PATH:/usr/local/opt/e2fsprogs/bin"
-export PATH="$PATH:/usr/local/opt/e2fsprogs/sbin"
+export PATH="$PATH:$prefix/opt/e2fsprogs/bin"
+export PATH="$PATH:$prefix/opt/e2fsprogs/sbin"
 EOF
 
-# .bash_profile ########################################################
+# .bash_profile or equiv ###############################################
 
-if ! grep -qE "([$]HOME|~)/\.bash_path" $HOME/.bash_profile; then
-	printf "%s\n" "" '[[ -f $HOME/.bash_path ]] && . $HOME/.bash_path' "" >> $HOME/.bash_profile
-fi
+echo 'Add the following line to your .bash_profile, .bashrc, .zshrc or equivalent.'
+printf "%s\n" "" '[[ -f $HOME/.path ]] && . $HOME/.path' ""
 
-if ! grep -qE "/usr/local/bin/bash" /etc/shells; then
-	echo 'Adding /usr/local/bin/bash to /etc/shells. Ctrl-C if not needed.'
-	sudo sh -c 'echo "/usr/local/bin/bash" >> /etc/shells'
-	echo 'Adding /usr/local/bin/zsh to /etc/shells. Ctrl-C if not needed.'
-	sudo sh -c 'echo "/usr/local/bin/zsh" >> /etc/shells'
+if ! grep -qE "$prefix/bin/bash" /etc/shells; then
+	echo "Adding $prefix/bin/bash to /etc/shells. Ctrl-C if not needed."
+	sudo sh -c "echo \"$prefix/bin/bash\" >> /etc/shells"
+	echo "Adding $prefix/bin/zsh to /etc/shells. Ctrl-C if not needed."
+	sudo sh -c "echo \"$prefix/bin/zsh\" >> /etc/shells"
 fi
